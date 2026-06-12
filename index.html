@@ -136,6 +136,15 @@
         .fab:hover { transform: scale(1.1); }
         .empty { text-align: center; padding: 50px; opacity: 0.5; grid-column: 1 / -1; }
     </style>
+	
+	<link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#4F46E5">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PriceTracker">
+    <link rel="apple-touch-icon" href="images/icon-192.png">
+	
 </head>
 <body>
 
@@ -827,5 +836,18 @@
             if(e.target.files.length) reader.readAsText(e.target.files[0]);
         }
     </script>
+	
+	<script>
+        // Registrar Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registrado con éxito'))
+                    .catch(err => console.error('Error al registrar el Service Worker', err));
+            });
+        }
+    </script>
+</body>
+
 </body>
 </html>
