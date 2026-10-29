@@ -1,3 +1,39 @@
+name: Crear APK
+
+# Se ejecuta solo cada vez que subes cambios a la rama main,
+# y también cuando lo pides a mano (pestaña Actions > Crear APK > Run workflow).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Permiso para publicar el APK en la sección "Releases" del repositorio
+permissions:
+  contents: write
+
+# Si subes varios cambios seguidos, los APK se fabrican de uno en uno
+concurrency:
+  group: crear-apk
+  cancel-in-progress: false
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Descargar el proyecto
+        uses: actions/checkout@v4
+
+      - name: Instalar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
 
       - name: Aceptar licencias del Android SDK
         run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
