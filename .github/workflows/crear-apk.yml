@@ -1,0 +1,27 @@
+
+      - name: Aceptar licencias del Android SDK
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+
+      - name: Fabricar el APK
+        run: |
+          # Cada APK nuevo lleva un número de versión mayor, así Android lo instala encima del anterior
+          export VERSION_CODE=$((100 + GITHUB_RUN_NUMBER))
+          export VERSION_NAME="1.0.${GITHUB_RUN_NUMBER}"
+          bash scripts/build-apk.sh
+
+      - name: Guardar el APK como archivo de la ejecución
+        uses: actions/upload-artifact@v4
+        with:
+          name: PriceTracker-apk
+          path: salida/PriceTracker.apk
+          if-no-files-found: error
+
+      - name: Publicar el APK en Releases (para descargarlo desde el celular)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete ultima-version --cleanup-tag --yes || true
+          gh release create ultima-version salida/PriceTracker.apk \
+            --target "$GITHUB_SHA" \
+            --title "PriceTracker (última versión)" \
+            --notes "APK de PriceTracker, versión 1.0.${{ github.run_number }}. Descárgalo desde el celular e instálalo."
