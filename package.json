@@ -1,0 +1,19 @@
+{
+  "name": "precios-mty",
+  "version": "2.0.0",
+  "private": true,
+  "description": "PriceTracker Pro - Rastreador de precios (app Android con Capacitor)",
+  "scripts": {
+    "apk": "bash scripts/build-apk.sh"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.6.0",
+    "@capacitor/filesystem": "^8.1.5",
+    "@capacitor/share": "^8.0.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.6.0"
+  }
+}

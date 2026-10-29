@@ -1,0 +1,10 @@
+{
+  "appId": "com.crys1534.preciosmty",
+  "appName": "PriceTracker",
+  "webDir": "www",
+  "plugins": {
+    "SystemBars": {
+      "initialViewportFitValueHint": "cover"
+    }
+  }
+}

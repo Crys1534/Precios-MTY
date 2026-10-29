@@ -1,0 +1,134 @@
+/* theme.css - colores (4 temas), base y estructura de la pantalla */
+
+/* Tema Índigo (el de siempre) */
+:root, [data-theme="indigo"] {
+  --head: #3730A3;      /* encabezado (queda bajo la barra de estado) */
+  --accent: #4F46E5;    /* botones y relleno de lo seleccionado (texto blanco encima) */
+  --link: #4F46E5;      /* color de acento cuando va como texto sobre el fondo */
+  --soft: #EEF2FF;      /* fondo suave del acento */
+  --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280;
+  --line: #E5E7EB; --line-strong: #C9CED6;
+  --good: #006300; --bad: #D03B3B;
+  /* Colores de la gráfica (validados para fondo claro y oscuro) */
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --s6: #008300;
+  color-scheme: light;
+}
+[data-theme="eco"] {
+  --head: #065F46; --accent: #047857; --link: #047857; --soft: #D1FAE5;
+  --bg: #F0FDF4; --card: #FFFFFF; --text: #064E3B; --muted: #4B5D58;
+  --line: #CDEFD9; --line-strong: #A7D8BC;
+}
+[data-theme="dark"] {
+  --head: #1E293B; --accent: #2563EB; --link: #7DB2FF; --soft: #1F3358;
+  --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #9AA8BC;
+  --line: #334155; --line-strong: #475569;
+  --good: #0ca30c; --bad: #E66767;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300;
+  color-scheme: dark;
+}
+[data-theme="warm"] {
+  --head: #92400E; --accent: #B45309; --link: #B45309; --soft: #FEF3C7;
+  --bg: #FFFBEB; --card: #FFFFFF; --text: #78350F; --muted: #8B5E34;
+  --line: #F3E2A9; --line-strong: #E3CC86;
+}
+
+/* Márgenes de seguridad (barra de estado, barra de navegación, notch). En un navegador normal valen 0 */
+:root {
+  --sat: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+  --sab: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+  --sal: var(--safe-area-inset-left, env(safe-area-inset-left, 0px));
+  --sar: var(--safe-area-inset-right, env(safe-area-inset-right, 0px));
+  --bar-h: 60px;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--bg); color: var(--text);
+  font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+  overflow: hidden;
+}
+[hidden] { display: none !important; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+h1, h2, h3, p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Estructura: encabezado / contenido que se desplaza / barra de abajo */
+#app {
+  display: grid; grid-template-rows: auto 1fr auto;
+  height: 100vh; height: 100dvh;
+}
+.top {
+  background: var(--head); color: #fff;
+  padding: calc(var(--sat) + 10px) calc(var(--sar) + 16px) 12px calc(var(--sal) + 16px);
+}
+[data-theme="dark"] .top { border-bottom: 1px solid var(--line); }
+.top-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 36px; }
+.top h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+.top .sub { font-size: 13px; opacity: .85; }
+
+#view {
+  overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;
+  padding: 14px calc(var(--sar) + 16px) 28px calc(var(--sal) + 16px);
+}
+.wrap { max-width: 760px; margin: 0 auto; }
+
+/* Barra de abajo */
+.tabbar {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  background: var(--card); border-top: 1px solid var(--line);
+  padding: 4px calc(var(--sar) + 4px) calc(var(--sab) + 4px) calc(var(--sal) + 4px);
+}
+.tab {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  min-height: 52px; background: none; border: 0; color: var(--muted);
+  font-size: 12px; font-weight: 600;
+}
+.tab .ico { display: grid; place-items: center; width: 56px; height: 28px; border-radius: 14px; font-size: 17px; transition: background-color .15s; }
+.tab[aria-current="page"] { color: var(--link); }
+.tab[aria-current="page"] .ico { background: var(--soft); }
+.tab.add { color: var(--text); }
+.tab.add .ico { background: var(--accent); color: #fff; }
+
+/* Hojas (pantallas que se abren encima) */
+.layer { position: fixed; inset: 0; z-index: 40; pointer-events: none; }
+.layer > * { pointer-events: auto; }
+.scrim { position: absolute; inset: 0; background: rgba(15, 23, 42, .45); animation: fade .18s ease-out; }
+.sheet {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  background: var(--bg); animation: rise .22s ease-out;
+}
+.sheet-head {
+  display: flex; align-items: center; gap: 4px;
+  background: var(--head); color: #fff;
+  padding: calc(var(--sat) + 6px) calc(var(--sar) + 8px) 8px calc(var(--sal) + 8px);
+}
+[data-theme="dark"] .sheet-head { border-bottom: 1px solid var(--line); }
+.sheet-head h2 { flex: 1; min-width: 0; font-size: 18px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; }
+.icon-btn {
+  display: grid; place-items: center; width: 44px; height: 44px; flex: none;
+  background: none; border: 0; border-radius: 22px; color: inherit; font-size: 18px;
+}
+.icon-btn:active { background: rgba(255, 255, 255, .16); }
+.sheet-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px calc(var(--sar) + 16px) 24px calc(var(--sal) + 16px); }
+.sheet-foot {
+  display: flex; gap: 10px; background: var(--card); border-top: 1px solid var(--line);
+  padding: 10px calc(var(--sar) + 16px) calc(var(--sab) + 10px) calc(var(--sal) + 16px);
+}
+
+@keyframes rise { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* Pantallas anchas (computadora / tablet): la hoja se vuelve un cuadro centrado */
+@media (min-width: 720px) {
+  .sheet { inset: 4vh 0 4vh 0; margin: 0 auto; width: 600px; max-width: 94vw; border-radius: 16px; overflow: hidden; box-shadow: 0 24px 60px rgba(0, 0, 0, .35); }
+  .sheet-head { padding-top: 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
