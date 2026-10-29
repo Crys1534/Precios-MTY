@@ -1,8 +1,26 @@
-// sw.js - Service Worker Básico
-self.addEventListener('install', (event) => {
-    console.log('Service Worker instalado');
+// sw.js - permite usar la versión web sin internet.
+// Siempre intenta primero la red (así los cambios se ven al instante) y, si no hay internet, usa lo guardado.
+const CACHE = 'pricetracker-v2';
+
+self.addEventListener('install', () => self.skipWaiting());
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
 });
 
 self.addEventListener('fetch', (event) => {
-    // Permite que la app cumpla el requisito técnico de PWA
+  const req = event.request;
+  if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
+  event.respondWith(
+    fetch(req)
+      .then((res) => {
+        if (res && res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); }
+        return res;
+      })
+      .catch(() => caches.match(req).then((hit) => hit || caches.match('./index.html')))
+  );
 });

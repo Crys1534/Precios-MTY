@@ -1,0 +1,5 @@
+# Carpetas que se crean solas al fabricar el APK (no se suben a GitHub)
+node_modules/
+www/
+android/
+salida/

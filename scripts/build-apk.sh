@@ -29,7 +29,14 @@ cp index.html manifest.json sw.js www/
 cp -r css js images vendor www/
 
 paso "2/6 Instalando Capacitor"
-npm ci --no-audit --no-fund
+# Con package-lock.json se instalan exactamente las mismas versiones de siempre.
+# Si por algún motivo ese archivo no está en el repositorio, se instala igual (sin fallar).
+if [ -f package-lock.json ]; then
+  npm ci --no-audit --no-fund
+else
+  echo "AVISO: no hay package-lock.json; se instalan las versiones más recientes permitidas"
+  npm install --no-audit --no-fund
+fi
 
 paso "3/6 Creando el proyecto Android"
 rm -rf android

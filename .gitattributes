@@ -1,2 +1,12 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Scripts siempre con saltos de linea de Linux (si no, fallan en GitHub)
+*.sh text eol=lf
+*.mjs text eol=lf
+*.yml text eol=lf
+
+# Archivos binarios: nunca modificar
+*.keystore binary
+*.woff2 binary
+*.png binary
